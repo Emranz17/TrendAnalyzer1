@@ -1,0 +1,47 @@
+import java.util.*;
+
+public class TrendAnalyzer {
+
+    public static void main(String[] args) {
+        // Sample ArrayList of phrases
+        ArrayList<String> phrasesList = new ArrayList<>(Arrays.asList(
+                "java", "programming", "is", "fun",
+                "java", "is", "powerful",
+                "programming", "is", "interesting",
+                "java", "programming", "is", "versatile",
+                "programming", "is", "fun",
+                "java", "programming", "is", "powerful",
+                "java", "programming", "is", "fun"
+        ));
+
+        // Count occurrences of each word
+        Map<String, Integer> wordCountMap = new HashMap<>();
+        for (String word : phrasesList) {
+            wordCountMap.put(word, wordCountMap.getOrDefault(word, 0) + 1);
+        }
+
+        // Create trendWord objects and insert into priority queue
+        PriorityQueue<trendWord> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(word -> wordCountMap.getOrDefault(word.getPhrase(), 0)));
+        for (Map.Entry<String, Integer> entry : wordCountMap.entrySet()) {
+            trendWord trendWordObj = new trendWord(entry.getValue(), entry.getKey());
+            priorityQueue.offer(trendWordObj);
+        }
+
+        // Retrieve the top 10 elements from the priority queue
+        int k = 10;
+        List<trendWord> topTrendWords = new ArrayList<>();
+        while (!priorityQueue.isEmpty() && k > 0) {
+            topTrendWords.add(priorityQueue.poll());
+            k--;
+        }
+
+        // Convert the top 10 trendWord objects to an array
+        trendWord[] topTrendWordsArray = topTrendWords.toArray(new trendWord[0]);
+
+        // Print the top 10 trendWord objects
+        System.out.println("Top 10 Trend Words:");
+        for (trendWord trendWordObj : topTrendWordsArray) {
+            System.out.println(trendWordObj);
+        }
+    }
+}
